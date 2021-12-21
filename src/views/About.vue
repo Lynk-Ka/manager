@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-      <router-link to="/">Home</router-link> |
+    <router-link to="/">Home</router-link> |
     <form class="ms-4" @submit.prevent="add()">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Name</label>
@@ -44,20 +44,18 @@
   </div>
 </template>
 <script>
-
-import axios from 'axios';
-
+// import { mapState } from "vuex";
+import axios from "axios";
 export default {
   data() {
     return {
       employ: {
-        id: '',
         name: "",
         email: "",
         address: "",
         phone: "",
+        id: "",
       },
-     
     };
   },
 
@@ -65,27 +63,40 @@ export default {
   created() {
     const id = this.$route.params.id
     if (this.$route.params.action == "edit") {
-      axios.get(`https://61bac447e943920017784a01.mockapi.io/employee/${id}`)
+      axios.get(`http://localhost:3000/employee/${id}`)
       .then(res => this.employ=res.data)
     }
   },
 
+  // computed: {
+  //   ...mapState(["employee", "employees", "index"]),
+  // },
+
   methods: {
-    // actionEmployee() {
-    //   if (this.$route.params.action == "create") {
-    //     this.$store.commit("ADD_EMPLOYEE", this.employ);
-    //   } else {
-    //     this.employees.splice(this.index, 1, this.employ);
-    //   }
-    //   this.$router.push({
-    //     name: "Home",
+    //-- import { mapState } from "vuex";
+    // createEmployee() {
+    //     console.log("this.employ: ", this.employ);
+
+    //   const apiClient = axios.create({
+    //     baseURL: "https://61bf4956b25c3a00173f4d95.mockapi.io",
+    //     // withCredentials: false,
+    //     headers: {
+    //       Accept: "application/json",
+    //       "Content-Type": "application/json",
+    //     },
     //   });
-    // },
-      
+    //   apiClient
+    //     .post("/employ", this.employ)
+    //     .then((response) => {
+    //       console.log("response:", response);
+    //     })
+    //     .catch((e) => {
+    //       console.log("e:", e);
+    //     });
     // },
     add(){
       if (this.$route.params.action == "create") {
-        axios.post(`https://61bac447e943920017784a01.mockapi.io/employee`,  this.employ)
+        axios.post(`http://localhost:3000/employee`,  this.employ)
           .then(() => {
             this.$router.push({
                 name: "Home"
@@ -96,7 +107,7 @@ export default {
           })
       }
       else{
-        axios.put(`https://61bac447e943920017784a01.mockapi.io/employee/`+this.employ.id, this.employ)
+        axios.put(`http://localhost:3000/employee/`+this.employ.id, this.employ)
           .then(() => {
             this.$router.push({
                 name: "Home"
@@ -109,8 +120,8 @@ export default {
 
       
     }
-
-        
+    
+    
   },
 };
 </script>
