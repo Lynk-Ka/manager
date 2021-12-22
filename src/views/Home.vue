@@ -3,7 +3,11 @@
     <div class="header">
       <div class="heager-title">Manager Employees</div>
       <div class="header-btn">
+<<<<<<< HEAD
+        <button type="button" class="btn btn-danger me-3" @click="deleteAll()">
+=======
         <button type="button" class="btn btn-danger" @click="deleteAll()">
+>>>>>>> 51969b00d3598dda6eeb1c10b737e5971a97e2df
           Delete
         </button>
         <router-link
@@ -46,10 +50,14 @@
             <td>
               <button
                 type="button"
+<<<<<<< HEAD
+                class="btn btn-edit"
+=======
                 class="btn btn-warning me-3"
+>>>>>>> 51969b00d3598dda6eeb1c10b737e5971a97e2df
                 @click="editEmployee(employee, employee.id)"
               >
-                <i class="bi bi-pencil-fill"></i>
+                <i  btn-warning class="bi bi-pencil-fill"></i>
               </button>
               <button
                 type="button"
@@ -109,9 +117,15 @@ export default {
       },
     };
   },
+<<<<<<< HEAD
+  // created() {
+  //   this.getAPI();
+  // },
+=======
   created() {
     console.log("this.$route: ", this.$route.query._page);
   },
+>>>>>>> 51969b00d3598dda6eeb1c10b737e5971a97e2df
   computed: {
     page() {
       return (
@@ -190,6 +204,12 @@ export default {
 </script>
 
 <style scoped>
+th{
+  text-align: center;
+}
+td{
+  text-align: center;
+}
 .header {
   display: flex;
   align-items: center;
@@ -198,21 +218,38 @@ export default {
   padding: 10px 0;
 }
 .heager-title {
-  font-size: 2rem;
+  font-size: 2.4rem;
   font-weight: bold;
   color: #fff;
 }
 input[type="checkbox"] {
   width: 20px;
   height: 20px;
-  margin-left: 40px;
 }
 .btn {
+<<<<<<< HEAD
+  font-size: 1.8rem;
+}
+.btn-edit{
+  color: #ffc107;
+  transition: .2s ease;
+}
+.btn-delete {
+  margin-right: 10px;
+  color: #dc3545;
+  transition: .2s ease;
+}
+  .btn-edit:hover,
+  .btn-delete:hover{
+    transform: scale(1.2);
+  }
+=======
   font-size: 1.6rem;
 }
 .btn-danger {
   margin-right: 10px;
 }
+>>>>>>> 51969b00d3598dda6eeb1c10b737e5971a97e2df
 .content {
   font-size: 1.6rem;
 }

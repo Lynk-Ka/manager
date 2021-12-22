@@ -5,6 +5,7 @@
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Name</label>
         <input
+          required
           type="text"
           class="form-control"
           id="name"
@@ -14,6 +15,7 @@
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Email </label>
         <input
+          required
           type="email"
           class="form-control"
           id="email"
@@ -23,6 +25,7 @@
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Address</label>
         <input
+          required
           type="text"
           class="form-control"
           id="adress"
@@ -32,6 +35,7 @@
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Phone</label>
         <input
+          required
           type="Text"
           class="form-control"
           id="phone"
