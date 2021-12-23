@@ -3,19 +3,15 @@
     <div class="header">
       <div class="heager-title">Manager Employees</div>
       <div class="header-btn">
-<<<<<<< HEAD
-        <button type="button" class="btn btn-danger me-3" @click="deleteAll()">
-=======
-        <button type="button" class="btn btn-danger" @click="deleteAll()">
->>>>>>> 51969b00d3598dda6eeb1c10b737e5971a97e2df
+        <button type="button" class="btn btn-danger me-3" @click="deleteAll()">        
           Delete
         </button>
         <router-link
           :to="{ name: 'About', params: { action: 'create' } }"
           type="button"
           class="btn btn-success"
-          >Add New Employees</router-link
-        >
+          >Add New Employees
+          </router-link>
       </div>
     </div>
 
@@ -34,7 +30,7 @@
           </tr>
         </thead>
         <tbody v-if="employees.length > 0">
-          <tr v-for="(employee, index) in employees" :key="index">
+          <tr v-for="employee in employees" :key="employee.id">
             <td>
               <input
                 type="checkbox"
@@ -50,18 +46,14 @@
             <td>
               <button
                 type="button"
-<<<<<<< HEAD
-                class="btn btn-edit"
-=======
-                class="btn btn-warning me-3"
->>>>>>> 51969b00d3598dda6eeb1c10b737e5971a97e2df
+                class="btn btn-edit me-3"
                 @click="editEmployee(employee, employee.id)"
               >
                 <i  btn-warning class="bi bi-pencil-fill"></i>
               </button>
               <button
                 type="button"
-                class="btn btn-danger"
+                class="btn btn-delete"
                 @click="deleteEmployee(employee.id)"
               >
                 <i class="bi bi-trash-fill"></i>
@@ -86,7 +78,7 @@
   </div>
 </template>
 
-<script>
+<script >
 // import { mapState } from "vuex";
 import Pagination from "@/components/Pagination";
 import axios from "axios";
@@ -94,20 +86,11 @@ export default {
   components: {
     Pagination,
   },
-  // computed: {
-  //   ...mapState(["employees"]),
-  // },
   data() {
     return {
       isCheckAll: false,
       selected: [],
-      employees: {
-        id: "",
-        name: "",
-        email: "",
-        address: "",
-        phone: "",
-      },
+      employees: [],
 
       //-- Lấy tổng số bản ghi employee
       total_item: 0,
@@ -117,15 +100,10 @@ export default {
       },
     };
   },
-<<<<<<< HEAD
-  // created() {
-  //   this.getAPI();
-  // },
-=======
+
   created() {
-    console.log("this.$route: ", this.$route.query._page);
+    this.getAPI()  
   },
->>>>>>> 51969b00d3598dda6eeb1c10b737e5971a97e2df
   computed: {
     page() {
       return (
@@ -204,6 +182,10 @@ export default {
 </script>
 
 <style scoped>
+.home{
+  box-shadow: 1px 1px 4px #ccc;
+  margin: 10px 20px 0 20px;
+}
 th{
   text-align: center;
 }
@@ -227,7 +209,6 @@ input[type="checkbox"] {
   height: 20px;
 }
 .btn {
-<<<<<<< HEAD
   font-size: 1.8rem;
 }
 .btn-edit{
@@ -239,17 +220,13 @@ input[type="checkbox"] {
   color: #dc3545;
   transition: .2s ease;
 }
-  .btn-edit:hover,
-  .btn-delete:hover{
-    transform: scale(1.2);
-  }
-=======
-  font-size: 1.6rem;
+.btn-edit:hover,
+.btn-delete:hover{
+  transform: scale(1.2);
 }
 .btn-danger {
   margin-right: 10px;
 }
->>>>>>> 51969b00d3598dda6eeb1c10b737e5971a97e2df
 .content {
   font-size: 1.6rem;
 }
