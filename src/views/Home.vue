@@ -1,9 +1,38 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@Lynk-Ka 
+Lynk-Ka
+/
+manager
+Public template
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+manager/src/src/views/Home.vue
+@Lynk-Ka
+Lynk-Ka Add files via upload
+Latest commit 62e7a5e 19 hours ago
+ History
+ 1 contributor
+331 lines (321 sloc)  7.95 KB
+   
 <template>
   <div class="home">
     <div class="header">
       <div class="heager-title">Manager Employees</div>
       <div class="header-btn">
-        <button type="button" class="btn btn-danger me-3" @click="deleteAll()">        
+        <button type="button" class="btn btn-danger me-3" @click="deleteAll()">
           Delete
         </button>
         <router-link
@@ -11,7 +40,7 @@
           type="button"
           class="btn btn-success"
           >Add New Employees
-          </router-link>
+        </router-link>
       </div>
     </div>
 
@@ -49,12 +78,12 @@
                 class="btn btn-edit me-3"
                 @click="editEmployee(employee, employee.id)"
               >
-                <i  btn-warning class="bi bi-pencil-fill"></i>
+                <i btn-warning class="bi bi-pencil-fill"></i>
               </button>
               <button
                 type="button"
                 class="btn btn-delete"
-                @click="deleteEmployee(employee.id)"
+                @click="showModal(employee.name, employee.id)"
               >
                 <i class="bi bi-trash-fill"></i>
               </button>
@@ -68,18 +97,63 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Modal -->
+    <div class="modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title">Delete Employee</div>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              @click="closeModal()"
+            ></button>
+          </div>
+          <div class="modal-body" v-if="mang.length > 1">
+            <p v-for="(name, index) in mang" :key="index">
+              Do you want to delete <strong>{{ name.name }}</strong>
+            </p>
+          </div>
+          <div class="modal-body" v-else>
+            <p>
+              Do you want to delete <strong>{{ ten }}</strong>
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              @click="closeModal()"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              @click="deleteEmployee(id) || deleteEmployees()"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- <pre>{{ selected }}</pre> -->
     <Pagination
       :totalItem="this.total_item"
       :currentPage="this.$route.query._page"
       :itemsPerPage="this.filter.page_size"
       :pageRange="5"
+      ref="data"
     />
   </div>
 </template>
 
 <script >
-// import { mapState } from "vuex";
 import Pagination from "@/components/Pagination";
 import axios from "axios";
 export default {
@@ -91,18 +165,19 @@ export default {
       isCheckAll: false,
       selected: [],
       employees: [],
-
+      mang: [],
+      ids: [],
+      ten: "",
+      id: "",
       //-- Lấy tổng số bản ghi employee
       total_item: 0,
-
       filter: {
         page_size: 5,
       },
     };
   },
-
   created() {
-    this.getAPI()  
+    this.getAPI();
   },
   computed: {
     page() {
@@ -112,8 +187,43 @@ export default {
     },
   },
   methods: {
-    getAPI() {
-      axios
+    showModal(name, id) {
+      // this.selected=[]
+      this.isCheckAll=false;
+      console.log(this.mang);
+      const modal = document.querySelector(".modal");
+      modal.style.display = "block";
+      this.ten = name;
+      this.id = id;
+
+    },    
+    closeModal() {
+      const modal = document.querySelector(".modal");
+      modal.style.display = "none";
+      this.selected = [];
+      this.mang = [];
+    },
+    deleteAll() {
+      if (this.selected.length >= 1) {
+        const modal = document.querySelector(".modal");
+        modal.style.display = "block";
+        for (let i = 0; i < this.selected.length; i++) {
+          this.mang.push(this.selected[i])
+         this.ids.push(this.selected[i].id);
+        }        
+      }
+     
+    },
+    deleteEmployees() {
+      this.ids.forEach((el) => {
+        this.deleteEmployee(el);
+      });
+      this.selected=[]
+      this.mang = [];
+    },
+    
+    async getAPI() {
+      await axios
         .get(
           `http://localhost:3000/employee?_page=${this.page}&_limit=${this.filter.page_size}`
         )
@@ -126,23 +236,31 @@ export default {
         });
     },
     deleteEmployee(id) {
-      // this.$store.commit("DELETE_EMPLOYEE", index);
       axios
         .delete(`http://localhost:3000/employee/` + id)
-        .then(() => {
-          this.getAPI();
+        .then(async () => {
+          this.isCheckAll = !this.isCheckAll;
+          if (this.selected.length == 0) {
+            this.checkAll();
+          }
+          await this.getAPI();
+          if (this.$route.query._page > this.$refs["data"].totalPage) {
+            this.$router.replace({
+              query: { _page: this.$refs["data"].totalPage },
+            });
+          }
         })
         .catch((e) => {
           this.errors.push(e);
         });
+      const modal = document.querySelector(".modal");
+      modal.style.display = "none";
     },
     editEmployee(employee, id) {
-      // this.$store.commit("EDIT_EMPLOYEE", index);
       axios
         .put(`http://localhost:3000/employee/` + id, employee)
         .then(() => {})
         .catch(function () {});
-
       // --chuyển trang
       this.$router.push({
         name: "About",
@@ -159,37 +277,27 @@ export default {
         });
       }
     },
+
     updateCheckAll() {
       if (this.selected.length == this.employees.length) {
         this.isCheckAll = true;
       } else {
         this.isCheckAll = false;
       }
-    },
-
-    deleteAll() {
-      if (this.selected.length >= 1) {
-        for (let i = 0; i < this.selected.length; i++) {
-          this.deleteEmployee(this.selected[i].id);
-        }
-      }
-    },
+    },    
   },
-  mounted() {
-    this.getAPI();
-  },
+  mounted() {},
 };
 </script>
-
 <style scoped>
-.home{
+.home {
   box-shadow: 1px 1px 4px #ccc;
   margin: 10px 20px 0 20px;
 }
-th{
+th {
   text-align: center;
 }
-td{
+td {
   text-align: center;
 }
 .header {
@@ -211,17 +319,17 @@ input[type="checkbox"] {
 .btn {
   font-size: 1.8rem;
 }
-.btn-edit{
+.btn-edit {
   color: #ffc107;
-  transition: .2s ease;
+  transition: 0.2s ease;
 }
 .btn-delete {
   margin-right: 10px;
   color: #dc3545;
-  transition: .2s ease;
+  transition: 0.2s ease;
 }
 .btn-edit:hover,
-.btn-delete:hover{
+.btn-delete:hover {
   transform: scale(1.2);
 }
 .btn-danger {
@@ -230,7 +338,23 @@ input[type="checkbox"] {
 .content {
   font-size: 1.6rem;
 }
-/* .btn-warning{
-        margin-right: 8px;
-    } */
+.modal {
+  position: fixed;
+  /* display: block; */
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.modal-dialog {
+  top: 20%;
+}
+.modal-header {
+  background-color: crimson;
+  color: #fff;
+}
+.modal-title {
+  font-size: 2rem;
+  font-weight: 700;
+}
+.modal-body {
+  font-size: 1.8rem;
+}
 </style>
